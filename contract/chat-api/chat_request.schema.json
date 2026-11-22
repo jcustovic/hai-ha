@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ha-ai-agent/contract/chat_request.schema.json",
+  "title": "POST /api/chat — request body",
+  "description": "One user message to the agent. The conversation is identified by session_id; the agent keeps its own memory of it, so the caller sends only the new message, never the history.",
+  "type": "object",
+  "required": ["session_id", "text"],
+  "properties": {
+    "session_id": {
+      "type": "string", "minLength": 1, "maxLength": 100,
+      "description": "identifies the conversation; a follow-up (including a 'yes' to a held action) must use the same value"
+    },
+    "text": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "language": {
+      "type": "string", "maxLength": 35,
+      "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$",
+      "description": "optional hint: the caller's language setting (for example Home Assistant's Assist language). A tie-breaker only: the agent answers in the language the user wrote in"
+    },
+    "source": {
+      "type": "string", "enum": ["web", "ha"], "default": "web",
+      "description": "optional: where the message came from; shown in the History tab. Defaults to the web chat"
+    }
+  },
+  "additionalProperties": false
+}

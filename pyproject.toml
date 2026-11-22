@@ -1,0 +1,35 @@
+[project]
+name = "hai-ha"
+version = "0.1.0"
+description = "HA AI Agent: an HA AI Agent container as a conversation agent in Home Assistant"
+requires-python = ">=3.14.2"
+dependencies = []  # the integration runs inside Home Assistant and uses only what it ships
+
+[dependency-groups]
+# pytest-homeassistant-custom-component pins an exact Home Assistant; 0.13.372 pins 2026.10.1, the
+# minimum version in hacs.json. Raise both together.
+dev = [
+  "pytest-homeassistant-custom-component==0.13.372",
+  # what Home Assistant's own `conversation` component needs (its manifest requirements for 2026.10.1)
+  "gazetteer-matcher==1.1.0",
+  "hassil==3.12.1",
+  "home-assistant-intents==2026.10.6",
+  "jsonschema",
+  "ruff",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["custom_components", "tests"]
+known-third-party = ["homeassistant", "pytest_homeassistant_custom_component"]

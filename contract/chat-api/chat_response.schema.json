@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ha-ai-agent/contract/chat_response.schema.json",
+  "title": "POST /api/chat — 200 response body",
+  "description": "The agent's reply. A provider failure (out of credits, daily limit, ...) is still a 200 with the explanation in text and the kind in error_kind, so a caller can simply show text.",
+  "type": "object",
+  "required": ["session_id", "text"],
+  "properties": {
+    "session_id": {"type": "string", "minLength": 1},
+    "text": {"type": "string", "description": "what to show or speak to the user"},
+    "error_kind": {
+      "type": ["string", "null"],
+      "description": "present only when the AI provider failed: out_of_credits, access_denied, daily_limit, rate_limit, model_not_allowed, rejected, unavailable or error"
+    },
+    "error_detail": {
+      "type": ["string", "null"],
+      "description": "the provider's own one-line explanation, at most 300 characters; never contains a key"
+    }
+  },
+  "additionalProperties": false
+}

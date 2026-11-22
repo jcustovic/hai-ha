@@ -1,0 +1,14 @@
+{
+  "domain": "hai_agent",
+  "name": "HA AI Agent",
+  "after_dependencies": ["assist_pipeline", "intent"],
+  "codeowners": ["@jcustovic"],
+  "config_flow": true,
+  "dependencies": ["conversation"],
+  "documentation": "https://github.com/jcustovic/hai-ha",
+  "integration_type": "service",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/jcustovic/hai-ha/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
