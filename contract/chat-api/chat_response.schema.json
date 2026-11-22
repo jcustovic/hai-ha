@@ -10,7 +10,7 @@
     "text": {"type": "string", "description": "what to show or speak to the user"},
     "error_kind": {
       "type": ["string", "null"],
-      "description": "present only when the AI provider failed: out_of_credits, access_denied, daily_limit, rate_limit, model_not_allowed, rejected, unavailable or error"
+      "description": "present only when something failed: the AI provider (out_of_credits, access_denied, daily_limit, rate_limit, model_not_allowed, rejected, unavailable or error), or Home Assistant, because ha-mcp did not answer (ha_unreachable). text then explains it, and for ha_unreachable says where to fix the address"
     },
     "error_detail": {
       "type": ["string", "null"],

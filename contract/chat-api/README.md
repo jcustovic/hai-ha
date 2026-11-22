@@ -13,7 +13,7 @@ Changes are additive (new optional fields): an old client must keep working.
 |---|---|
 | Auth | the chat password: `Authorization: Bearer <password>` (or `X-Chat-Token`). Repeated wrong values lock the caller out for a while |
 | Body | [`chat_request.schema.json`](chat_request.schema.json): `session_id`, `text`, optional `language`, optional `source` (`web` default, `ha`) |
-| `200` | [`chat_response.schema.json`](chat_response.schema.json): `text` is always what to show or speak. A provider failure is still a 200 (`error_kind` and `error_detail` say what happened) |
+| `200` | [`chat_response.schema.json`](chat_response.schema.json): `text` is always what to show or speak. A provider failure is still a 200 (`error_kind` and `error_detail` say what happened), and so is a Home Assistant that cannot be reached (`error_kind: ha_unreachable`; `text` says where to fix the ha-mcp address) |
 | `401` | missing or wrong password |
 | `422` | the body does not match the request schema (for example an invalid `language`) |
 | `429` | too many failed passwords, or too many chat requests; honour `Retry-After` |
