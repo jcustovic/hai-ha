@@ -67,7 +67,7 @@ async def test_every_failure_is_shown_as_an_error_and_nothing_is_saved(
     error: str,
 ) -> None:
     aioclient_mock.get(CHECK, **mock)
-    aioclient_mock.get(HEALTH, status=404, text="not found")  # no sign of an HA AI Agent
+    aioclient_mock.get(HEALTH, status=404, text="not found")  # no sign of an HAI
     result = await _submit(hass, (await _start(hass))["flow_id"])
     assert result["type"] is FlowResultType.FORM
     assert result["errors"] == {"base": error}

@@ -22,7 +22,7 @@ def _enable_custom_integrations(enable_custom_integrations: None) -> None:
 def entry() -> MockConfigEntry:
     return MockConfigEntry(
         domain=DOMAIN,
-        title="HA AI Agent",
+        title="HAI - Your home AI Agent",
         data={"url": URL, "password": PASSWORD},
         unique_id=URL,
     )

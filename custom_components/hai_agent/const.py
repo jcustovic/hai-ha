@@ -1,6 +1,8 @@
-"""Constants for the HA AI Agent integration."""
+"""Constants for the HAI integration."""
 
 DOMAIN = "hai_agent"
+# What Home Assistant shows for an added HAI: the entry, its device, and the agent in Assist's list.
+ENTRY_TITLE = "HAI - Your home AI Agent"
 
 # Sent as `source` so the container's History tab can tell these conversations from the web chat.
 SOURCE = "ha"

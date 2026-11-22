@@ -1,4 +1,4 @@
-"""HA AI Agent: use an HA AI Agent container as a conversation agent in Assist.
+"""HAI: use an HAI container as a conversation agent in Assist.
 
 Home Assistant offers the model no tools and no entity context here: the text the user says is
 forwarded to the container, whose own agent (its safety rules and knowledge of the home) answers.

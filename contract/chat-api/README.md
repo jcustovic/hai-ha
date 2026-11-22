@@ -1,7 +1,7 @@
 # Chat API — published contract
 
-What the HA AI Agent container (`hai-agent`) promises to callers that talk to the agent from outside its own
-web page, such as the Home Assistant integration `hai-ha`. `hai-agent` **owns** these files and its tests check
+What HAI container (`hai-agent`) promises to callers that talk to the agent from outside its own
+web page, such as the Home Assistant integration `hai-home-assistant-integration`. `hai-agent` **owns** these files and its tests check
 the container against them. A client keeps a copy and tests itself against it; the copy is refreshed from
 `hai-agent` whenever the API changes, never edited on its own.
 
@@ -30,7 +30,7 @@ No auth, reveals nothing else. `200` with `{"status": "ok"}` when the agent is r
 `{"status": "setup"}` while the container waits for its first-run setup (or a re-enrollment). In setup the
 two endpoints above do not exist yet (`404`), so a caller that gets a `404` reads this to tell "finish the
 container's setup first" (`setup`) from "an older container without `/api/auth/check`" (`ok`) and from
-"not an HA AI Agent at all" (anything else).
+"not an HAI at all" (anything else).
 
 ## Home Assistant discovery (add-on only)
 

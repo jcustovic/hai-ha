@@ -25,7 +25,7 @@ from .api import (
     RateLimited,
     normalize_url,
 )
-from .const import DOMAIN
+from .const import DOMAIN, ENTRY_TITLE
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -58,7 +58,7 @@ async def _validate(hass: HomeAssistant, url: str, password: str) -> dict[str, s
     except BadResponse:
         return {"base": "not_hai_agent"}
     except Exception:
-        _LOGGER.exception("Unexpected error while checking the HA AI Agent container")
+        _LOGGER.exception("Unexpected error while checking HAI container")
         return {"base": "unknown"}
     return {}
 
@@ -93,7 +93,7 @@ class HaiAgentConfigFlow(ConfigFlow, domain=DOMAIN):
                 errors=errors,
             )
         return self.async_create_entry(
-            title="HA AI Agent", data={CONF_URL: url, CONF_PASSWORD: password}
+            title=ENTRY_TITLE, data={CONF_URL: url, CONF_PASSWORD: password}
         )
 
     async def async_step_reauth(self, entry_data: Mapping[str, Any]) -> ConfigFlowResult:
@@ -118,7 +118,7 @@ class HaiAgentConfigFlow(ConfigFlow, domain=DOMAIN):
             entry, data_updates={CONF_PASSWORD: password}
         )
 
-    # --- discovery: the HA AI Agent add-on announced itself through the Supervisor -------------
+    # --- discovery: HAI add-on announced itself through the Supervisor -------------
 
     async def async_step_hassio(self, discovery_info: HassioServiceInfo) -> ConfigFlowResult:
         """The add-on sends its internal address and chat password at start and after a reset."""
@@ -147,7 +147,7 @@ class HaiAgentConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_hassio_confirm(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        name = self.context.get("title_placeholders", {}).get("name", "HA AI Agent")
+        name = self.context.get("title_placeholders", {}).get("name", ENTRY_TITLE)
         if user_input is None:
             return self.async_show_form(
                 step_id="hassio_confirm", description_placeholders={"name": name}
@@ -157,4 +157,4 @@ class HaiAgentConfigFlow(ConfigFlow, domain=DOMAIN):
             return self.async_show_form(
                 step_id="hassio_confirm", description_placeholders={"name": name}, errors=errors
             )
-        return self.async_create_entry(title="HA AI Agent", data=dict(data))
+        return self.async_create_entry(title=ENTRY_TITLE, data=dict(data))

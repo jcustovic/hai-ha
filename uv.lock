@@ -1195,7 +1195,7 @@ wheels = [
 ]
 
 [[package]]
-name = "hai-ha"
+name = "hai-home-assistant-integration"
 version = "0.1.0"
 source = { virtual = "." }
 

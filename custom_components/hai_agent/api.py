@@ -1,4 +1,4 @@
-"""Client for the HA AI Agent container's chat API (contract/chat-api/).
+"""Client for HAI container's chat API (contract/chat-api/).
 
 Knows nothing about Home Assistant except that it is handed an aiohttp session, so it can be tested
 on its own. Every failure is one of the exceptions below; the callers turn them into messages.
@@ -51,11 +51,11 @@ class BadResponse(HaiError):
 
 
 class ContainerTooOld(BadResponse):
-    """It is probably an HA AI Agent, but a version from before the password check existed."""
+    """It is probably an HAI, but a version from before the password check existed."""
 
 
 class ContainerInSetup(BadResponse):
-    """It is an HA AI Agent, but its first-run setup (or a re-enrollment) is not finished yet."""
+    """It is an HAI, but its first-run setup (or a re-enrollment) is not finished yet."""
 
 
 class _NotFound(BadResponse):
@@ -102,7 +102,7 @@ class HaiAgentClient:
             await self._raise_why_not_found(old_container_possible=True)
 
     async def _raise_why_not_found(self, *, old_container_possible: bool) -> NoReturn:
-        """An endpoint answered 404. /healthz tells an HA AI Agent still in first-run setup
+        """An endpoint answered 404. /healthz tells an HAI still in first-run setup
         ("setup": finish it first) from one that predates the endpoint ("ok": update it) and from
         something else entirely (a router page, another app)."""
         try:
@@ -175,7 +175,7 @@ class HaiAgentClient:
         if not isinstance(data, dict):
             raise BadResponse("the answer is not a JSON object")
         if expect_status is not None and data.get("status") != expect_status:
-            raise BadResponse("not a HA AI Agent container")
+            raise BadResponse("not an HAI container")
         return data
 
 

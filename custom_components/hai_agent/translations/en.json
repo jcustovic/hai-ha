@@ -2,8 +2,8 @@
   "config": {
     "step": {
       "user": {
-        "title": "HA AI Agent",
-        "description": "Enter the address of your HA AI Agent container and its chat password (the one it showed once during setup).",
+        "title": "HAI - Your home AI Agent",
+        "description": "Enter the address of your HAI container and its chat password (the one it showed once during setup).",
         "data": {
           "url": "Address",
           "password": "Chat password"
@@ -15,13 +15,13 @@
       },
       "reauth_confirm": {
         "title": "Enter the password again",
-        "description": "The HA AI Agent did not accept the saved password. This happens when its chat password was reset or the container was set up again.",
+        "description": "HAI did not accept the saved password. This happens when its chat password was reset or the container was set up again.",
         "data": {
           "password": "Chat password"
         }
       },
       "hassio_confirm": {
-        "title": "HA AI Agent",
+        "title": "HAI - Your home AI Agent",
         "description": "The {name} add-on is running on this Home Assistant. Add it as a conversation agent? Its address and chat password come from the add-on, so there is nothing to type."
       }
     },
@@ -30,9 +30,9 @@
       "invalid_auth": "The password was not accepted.",
       "cannot_connect": "Nothing answered at that address. Check that the container is running and reachable from Home Assistant.",
       "rate_limited": "Too many attempts. Wait a minute and try again.",
-      "container_too_old": "This looks like an older HA AI Agent container. Update it (rebuild the image) and try again.",
-      "container_in_setup": "This HA AI Agent container has not finished its setup yet. Open its page (the same address in a browser), complete the setup, then enter the chat password it shows.",
-      "not_hai_agent": "Something answered, but it does not look like an HA AI Agent container.",
+      "container_too_old": "This looks like an older HAI container. Update it (rebuild the image) and try again.",
+      "container_in_setup": "This HAI container has not finished its setup yet. Open its page (the same address in a browser), complete the setup, then enter the chat password it shows.",
+      "not_hai_agent": "Something answered, but it does not look like an HAI container.",
       "unknown": "Unexpected error. See the Home Assistant log."
     },
     "abort": {

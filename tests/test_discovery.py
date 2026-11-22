@@ -1,4 +1,4 @@
-"""Discovery: the HA AI Agent add-on announces itself through the Supervisor (`hassio` step).
+"""Discovery: HAI add-on announces itself through the Supervisor (`hassio` step).
 
 The add-on sends {"host", "port", "password"} at start and again after a password reset
 (hai-agent: ha_discovery.py; described in contract/chat-api/README.md).
@@ -22,12 +22,13 @@ from tests.conftest import PASSWORD, URL
 SLUG = "abcd1234_hai_agent"
 HOST = "abcd1234-hai-agent"
 ADDON_URL = f"http://{HOST}:8099"
+NAME = "HAI - Your home AI Agent"  # the add-on's name, sent with its announcement
 
 
 def info(password: str = "addon-password", **config: Any) -> HassioServiceInfo:
     return HassioServiceInfo(
         config={"host": HOST, "port": 8099, "password": password, **config},
-        name="HA AI Agent",
+        name=NAME,
         slug=SLUG,
         uuid="uuid-1",
     )
@@ -46,7 +47,7 @@ async def test_a_running_add_on_is_offered_and_added_with_nothing_typed(
 
     result = await discover(hass, info())
     assert result["type"] is FlowResultType.FORM and result["step_id"] == "hassio_confirm"
-    assert result["description_placeholders"] == {"name": "HA AI Agent"}
+    assert result["description_placeholders"] == {"name": NAME}
     assert aioclient_mock.call_count == 0  # nothing is tried before the user confirms
 
     result = await hass.config_entries.flow.async_configure(result["flow_id"], {})
@@ -63,7 +64,7 @@ async def test_a_new_password_from_the_add_on_updates_the_entry_by_itself(
     """After 'Reset chat password' the add-on announces again: no re-authentication needed."""
     aioclient_mock.get(f"{ADDON_URL}/api/auth/check", json={"status": "ok"})
     entry = MockConfigEntry(
-        domain=DOMAIN, title="HA AI Agent", unique_id=f"addon:{SLUG}",
+        domain=DOMAIN, title=NAME, unique_id=f"addon:{SLUG}",
         data={"url": ADDON_URL, "password": "old"}, source=config_entries.SOURCE_HASSIO,
     )
     entry.add_to_hass(hass)
@@ -97,7 +98,7 @@ async def test_an_ignored_add_on_is_not_offered_again(hass: HomeAssistant) -> No
                                                                       "password": "x"}],
 )
 async def test_incomplete_details_are_refused(hass: HomeAssistant, config: dict[str, Any]) -> None:
-    discovery = HassioServiceInfo(config=config, name="HA AI Agent", slug=SLUG, uuid="u")
+    discovery = HassioServiceInfo(config=config, name=NAME, slug=SLUG, uuid="u")
     result = await discover(hass, discovery)
     assert result["type"] is FlowResultType.ABORT and result["reason"] == "invalid_discovery_info"
 

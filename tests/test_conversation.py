@@ -18,7 +18,7 @@ from tests.conftest import PASSWORD, URL
 
 CHECK = f"{URL}/api/auth/check"
 CHAT = f"{URL}/api/chat"
-AGENT = "conversation.ha_ai_agent"
+AGENT = "conversation.hai_your_home_ai_agent"  # named after the entry title
 CONTRACT = Path(__file__).resolve().parents[1] / "contract" / "chat-api"
 
 
@@ -162,8 +162,8 @@ async def test_a_very_long_conversation_id_is_replaced_by_a_stable_short_one(
 @pytest.mark.parametrize(
     ("mock", "expected"),
     [
-        ({"exc": aiohttp.ClientConnectionError()}, "I can't reach the HA AI Agent right now"),
-        ({"exc": TimeoutError()}, "I can't reach the HA AI Agent right now"),
+        ({"exc": aiohttp.ClientConnectionError()}, "I can't reach HAI right now"),
+        ({"exc": TimeoutError()}, "I can't reach HAI right now"),
         ({"status": 429, "json": {"detail": "slow down"}, "headers": {"Retry-After": "12"}},
          "Try again in 12 seconds"),
         ({"status": 422, "json": {"detail": "x"}}, "Something went wrong"),

@@ -33,19 +33,19 @@ _LOGGER = logging.getLogger(__name__)
 
 # What the user hears when something is wrong. No question marks: that would keep a satellite
 # listening.
-MESSAGE_CANNOT_CONNECT = "I can't reach the HA AI Agent right now. Check that it is running."
+MESSAGE_CANNOT_CONNECT = "I can't reach HAI right now. Check that it is running."
 MESSAGE_INVALID_AUTH = (
-    "The HA AI Agent did not accept the saved password. Please enter it again in Home Assistant."
+    "HAI did not accept the saved password. Please enter it again in Home Assistant."
 )
-MESSAGE_UNEXPECTED = "Something went wrong while talking to the HA AI Agent."
+MESSAGE_UNEXPECTED = "Something went wrong while talking to HAI."
 MESSAGE_IN_SETUP = (
-    "The HA AI Agent is not set up yet. Finish its setup on its own page, then try again."
+    "HAI is not set up yet. Finish its setup on its own page, then try again."
 )
 
 
 def message_rate_limited(retry_after: int | None) -> str:
     wait = f" Try again in {retry_after} seconds." if retry_after else " Try again in a moment."
-    return f"The HA AI Agent is busy.{wait}"
+    return f"HAI is busy.{wait}"
 
 
 async def async_setup_entry(
@@ -111,10 +111,10 @@ class HaiAgentConversationEntity(
         except ContainerInSetup:
             return MESSAGE_IN_SETUP
         except BadResponse:
-            _LOGGER.warning("The HA AI Agent answered in an unexpected way", exc_info=True)
+            _LOGGER.warning("HAI answered in an unexpected way", exc_info=True)
             return MESSAGE_UNEXPECTED
         except HaiError:
-            _LOGGER.exception("Unexpected error from the HA AI Agent")
+            _LOGGER.exception("Unexpected error from HAI")
             return MESSAGE_UNEXPECTED
         if reply.error_kind:
             _LOGGER.debug("The AI provider failed: %s (%s)", reply.error_kind, reply.error_detail)

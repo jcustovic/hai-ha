@@ -1,7 +1,7 @@
 [project]
-name = "hai-ha"
+name = "hai-home-assistant-integration"
 version = "0.1.0"
-description = "HA AI Agent: an HA AI Agent container as a conversation agent in Home Assistant"
+description = "HAI - Your home AI Agent: an HAI container as a conversation agent in Home Assistant"
 requires-python = ">=3.14.2"
 dependencies = []  # the integration runs inside Home Assistant and uses only what it ships
 
