@@ -13,6 +13,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.selector import TextSelector, TextSelectorConfig, TextSelectorType
+from homeassistant.helpers.service_info.hassio import HassioServiceInfo
 
 from .api import (
     BadResponse,
@@ -66,6 +67,7 @@ class HaiAgentConfigFlow(ConfigFlow, domain=DOMAIN):
     """Add the container as a conversation agent."""
 
     VERSION = 1
+    _discovered: dict[str, str]
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is None:
@@ -115,3 +117,44 @@ class HaiAgentConfigFlow(ConfigFlow, domain=DOMAIN):
         return self.async_update_reload_and_abort(
             entry, data_updates={CONF_PASSWORD: password}
         )
+
+    # --- discovery: the HA AI Agent add-on announced itself through the Supervisor -------------
+
+    async def async_step_hassio(self, discovery_info: HassioServiceInfo) -> ConfigFlowResult:
+        """The add-on sends its internal address and chat password at start and after a reset."""
+        config = discovery_info.config
+        try:
+            url = normalize_url(f"http://{config['host']}:{int(config['port'])}")
+            password = str(config["password"])
+        except (KeyError, TypeError, ValueError):
+            return self.async_abort(reason="invalid_discovery_info")
+
+        # Already added from an earlier announcement: take the current address and password, and
+        # reload. This is how a reset password reaches the integration with nothing typed.
+        await self.async_set_unique_id(f"addon:{discovery_info.slug}")
+        self._abort_if_unique_id_configured(updates={CONF_URL: url, CONF_PASSWORD: password})
+
+        # Added by hand before (by its direct address): the same container has the same password
+        # (random, 24 characters), so it is not offered a second time.
+        for entry in self._async_current_entries(include_ignore=False):
+            if entry.data.get(CONF_PASSWORD) == password or entry.data.get(CONF_URL) == url:
+                return self.async_abort(reason="already_configured")
+
+        self._discovered = {CONF_URL: url, CONF_PASSWORD: password}
+        self.context["title_placeholders"] = {"name": discovery_info.name}
+        return await self.async_step_hassio_confirm()
+
+    async def async_step_hassio_confirm(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        name = self.context.get("title_placeholders", {}).get("name", "HA AI Agent")
+        if user_input is None:
+            return self.async_show_form(
+                step_id="hassio_confirm", description_placeholders={"name": name}
+            )
+        data = self._discovered
+        if errors := await _validate(self.hass, data[CONF_URL], data[CONF_PASSWORD]):
+            return self.async_show_form(
+                step_id="hassio_confirm", description_placeholders={"name": name}, errors=errors
+            )
+        return self.async_create_entry(title="HA AI Agent", data=dict(data))

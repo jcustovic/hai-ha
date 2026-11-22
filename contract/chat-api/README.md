@@ -32,6 +32,21 @@ two endpoints above do not exist yet (`404`), so a caller that gets a `404` read
 container's setup first" (`setup`) from "an older container without `/api/auth/check`" (`ok`) and from
 "not an HA AI Agent at all" (anything else).
 
+## Home Assistant discovery (add-on only)
+
+Running as a Home Assistant add-on, the container announces itself through the Supervisor (`POST /discovery`)
+for the integration domain `hai_agent`, at start and again whenever its chat password changes:
+
+```json
+{"service": "hai_agent", "config": {"host": "abcd1234-hai-agent", "port": 8099, "password": "…"}}
+```
+
+`host` is the add-on's name on Home Assistant's internal network and `port` the container's port, so the
+caller's address is `http://<host>:<port>`; `password` is the chat password for the endpoints above. Home
+Assistant gives it to the integration's `hassio` config-flow step (`HassioServiceInfo.config`, with the add-on's
+`slug` and `name`). Only Home Assistant Core can read discovery messages; other add-ons cannot. Outside an add-on
+nothing is announced.
+
 Notes for callers:
 
 - **Send only the new message.** The agent keeps the conversation under `session_id` (bounded and expiring).

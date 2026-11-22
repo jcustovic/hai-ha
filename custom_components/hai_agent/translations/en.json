@@ -10,15 +10,19 @@
         },
         "data_description": {
           "url": "For example http://192.168.1.20:8099",
-          "password": "If you lost it, use Re-enroll on the container's page to get a new one."
+          "password": "If you lost it, reset it on the container's page (Account, Reset chat password) or with hai-agent reset-password."
         }
       },
       "reauth_confirm": {
         "title": "Enter the password again",
-        "description": "The HA AI Agent did not accept the saved password. This happens when the container was set up again.",
+        "description": "The HA AI Agent did not accept the saved password. This happens when its chat password was reset or the container was set up again.",
         "data": {
           "password": "Chat password"
         }
+      },
+      "hassio_confirm": {
+        "title": "HA AI Agent",
+        "description": "The {name} add-on is running on this Home Assistant. Add it as a conversation agent? Its address and chat password come from the add-on, so there is nothing to type."
       }
     },
     "error": {
@@ -33,7 +37,9 @@
     },
     "abort": {
       "already_configured": "This container is already added.",
-      "reauth_successful": "The password was updated."
-    }
+      "reauth_successful": "The password was updated.",
+      "invalid_discovery_info": "The add-on sent incomplete connection details. Update the add-on, or add it by its address."
+    },
+    "flow_title": "{name}"
   }
 }

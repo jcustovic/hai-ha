@@ -30,7 +30,12 @@ reply back.
 
 ## Set up
 
-You need a running HA AI Agent container and its **chat password** (shown once when the container was set up).
+**With the HA AI Agent add-on** (Home Assistant OS): nothing to type. When the add-on is set up and running,
+**Settings → Devices & services** shows **Discovered: HA AI Agent**. Press **Add** and confirm; the add-on supplies its
+address and chat password, and after a password reset the integration takes the new one by itself.
+
+**Otherwise** (a Docker container, or adding it by hand) you need the container's address and its **chat password**
+(shown once when the container was set up):
 
 1. Enter the container's address, for example `http://192.168.1.20:8099`, or `http://<your Home Assistant>:8099`
    when it runs as the add-on, and the chat password. Both are checked before anything is saved.
@@ -39,7 +44,7 @@ You need a running HA AI Agent container and its **chat password** (shown once w
 3. Consider turning off **Prefer handling commands locally** in that voice assistant: with it on, Home Assistant
    answers simple commands itself, without the container and without its confirmations.
 
-**Lost or changed the password?** Reset it in the container (inside Home Assistant: the add-on's page → Account →
+**Lost or changed the password?** With the add-on there is nothing to do here. Otherwise reset it in the container (inside Home Assistant: the add-on's page → Account →
 *Reset chat password*; in Docker: `docker exec <container> hai-agent reset-password`). Home Assistant then says the
 saved password was not accepted and asks for the new one under Settings → Devices & services.
 
