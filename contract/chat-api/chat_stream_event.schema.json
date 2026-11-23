@@ -46,7 +46,8 @@
         "session_id": {"type": "string", "minLength": 1},
         "text": {"type": "string"},
         "error_kind": {"type": ["string", "null"]},
-        "error_detail": {"type": ["string", "null"]}
+        "error_detail": {"type": ["string", "null"]},
+        "remembered": {"type": ["boolean", "null"]}
       },
       "additionalProperties": false
     }

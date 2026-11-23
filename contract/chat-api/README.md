@@ -77,6 +77,10 @@ Notes for callers:
 - **A confirmation is an ordinary reply.** A sensitive action is held and the reply is a question ("Unlock the
   front door?"). The user's next message **in the same session** is the answer; anything but a clear yes
   cancels it, and so does waiting more than five minutes.
+- **The agent forgets an idle conversation** (an hour without a message by default, or sooner if the
+  container is busy with many conversations). A message sent after that is answered without the earlier turns,
+  and the reply says so with `remembered: false` (also `false` for a first message), so a caller can tell the
+  user that earlier messages are no longer remembered. A question waiting for a "yes" lasts five minutes.
 - **A command can take a while** (several model calls, tools run locally): use a generous timeout, at least 60 s.
 - **The password can be replaced** (Account → *Reset chat password* inside Home Assistant, or
   `hai-agent reset-password` on the machine); the old one stops working at once. A caller then gets `401` and

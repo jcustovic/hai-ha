@@ -15,6 +15,10 @@
     "error_detail": {
       "type": ["string", "null"],
       "description": "the provider's own one-line explanation, at most 300 characters; never contains a key"
+    },
+    "remembered": {
+      "type": ["boolean", "null"],
+      "description": "whether the agent still had this conversation in mind when the message arrived. false for a first message and for one written after the conversation expired (idle for the session time to live, an hour by default) or was forgotten: the agent then answers without the earlier messages, and a caller can say so. Absent from older containers"
     }
   },
   "additionalProperties": false
