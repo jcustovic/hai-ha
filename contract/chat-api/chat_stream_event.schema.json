@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ha-ai-agent/contract/chat_stream_event.schema.json",
+  "title": "POST /api/chat with stream: true — one event",
+  "description": "The body is text/event-stream: each event is one line 'data: <this JSON>' followed by a blank line. Any number of step, delta and reset events, then exactly one done. The done event is the same reply as the JSON body without streaming, and its text is the final answer: it replaces whatever the deltas showed.",
+  "oneOf": [
+    {
+      "title": "delta",
+      "description": "the next piece of the reply, to append to what is shown",
+      "type": "object",
+      "required": ["type", "text"],
+      "properties": {
+        "type": {"const": "delta"},
+        "text": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    {
+      "title": "step",
+      "description": "what the agent is doing right now, in one short line (waiting for the model, or which tool it runs, for example 'Step 2: get_state(entity_id=light.kitchen)'); for a progress display. Never contains private fact text. Not part of the answer",
+      "type": "object",
+      "required": ["type", "text"],
+      "properties": {
+        "type": {"const": "step"},
+        "text": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    {
+      "title": "reset",
+      "description": "what was shown so far was not the answer (the agent went on to look something up or act): clear it and show the deltas that follow",
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {"const": "reset"}
+      },
+      "additionalProperties": false
+    },
+    {
+      "title": "done",
+      "description": "the end of the reply: the fields of chat_response.schema.json, plus type",
+      "type": "object",
+      "required": ["type", "session_id", "text"],
+      "properties": {
+        "type": {"const": "done"},
+        "session_id": {"type": "string", "minLength": 1},
+        "text": {"type": "string"},
+        "error_kind": {"type": ["string", "null"]},
+        "error_detail": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    }
+  ]
+}

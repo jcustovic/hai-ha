@@ -12,11 +12,34 @@ Changes are additive (new optional fields): an old client must keep working.
 | | |
 |---|---|
 | Auth | the chat password: `Authorization: Bearer <password>` (or `X-Chat-Token`). Repeated wrong values lock the caller out for a while |
-| Body | [`chat_request.schema.json`](chat_request.schema.json): `session_id`, `text`, optional `language`, optional `source` (`web` default, `ha`) |
-| `200` | [`chat_response.schema.json`](chat_response.schema.json): `text` is always what to show or speak. A provider failure is still a 200 (`error_kind` and `error_detail` say what happened), and so is a Home Assistant that cannot be reached (`error_kind: ha_unreachable`; `text` says where to fix the ha-mcp address) |
+| Body | [`chat_request.schema.json`](chat_request.schema.json): `session_id`, `text`, optional `language`, optional `source` (`web` default, `ha`), optional `stream` (default `false`) |
+| `200` | without `stream`: [`chat_response.schema.json`](chat_response.schema.json): `text` is always what to show or speak. A provider failure is still a 200 (`error_kind` and `error_detail` say what happened), and so is a Home Assistant that cannot be reached (`error_kind: ha_unreachable`; `text` says where to fix the ha-mcp address) |
 | `401` | missing or wrong password |
 | `422` | the body does not match the request schema (for example an invalid `language`) |
 | `429` | too many failed passwords, or too many chat requests; honour `Retry-After` |
+
+### Streaming the reply (`"stream": true`)
+
+With `"stream": true` the same endpoint answers `200` with `Content-Type: text/event-stream` and sends the
+reply while it is written. Each event is one line `data: <JSON>` and a blank line, described by
+[`chat_stream_event.schema.json`](chat_stream_event.schema.json):
+
+- `{"type": "delta", "text": "…"}`: the next piece of the answer; append it.
+- `{"type": "step", "text": "…"}`: what the agent is doing now ("Step 2: waiting for the model…", or the tool it
+  runs, such as "Step 1: get_state(entity_id=light.kitchen)"), for a progress line while no text has come yet.
+  It is not part of the answer and carries no private text; ignore it if you have no use for it.
+- `{"type": "reset"}`: what was shown so far was not the answer (the model wrote a sentence and then went on to
+  look something up or act); clear it.
+- `{"type": "done", "session_id", "text", "error_kind", "error_detail"}`: exactly once, last: the same reply as the
+  JSON body, including provider failures. **`text` is the answer and replaces what was streamed**, so a caller
+  can ignore `step`, `delta` and `reset` altogether and use only `done`.
+
+Auth, rate limits and a bad body are refused before the stream starts, with the usual status codes and no
+stream. After it has started the status is already `200`: a failure arrives as a `done` event with `error_kind`.
+A stream that ends without `done` was cut off. Closing the connection does not stop the command: it finishes,
+is logged, and its answer is kept in the history. Callers that do not send `stream` get the JSON body as before.
+Some text is provisional: a held action ("Unlock the front door?") can follow text such as "Door unlocked" that the model
+wrote before the safety check, so show only `done.text` where a wrong sentence would matter (voice, notifications).
 
 ## `GET /api/auth/check`
 

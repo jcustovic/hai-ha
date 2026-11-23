@@ -19,6 +19,10 @@
     "source": {
       "type": "string", "enum": ["web", "ha"], "default": "web",
       "description": "optional: where the message came from; shown in the History tab. Defaults to the web chat"
+    },
+    "stream": {
+      "type": "boolean", "default": false,
+      "description": "optional: answer as server-sent events while the reply is written (see chat_stream_event.schema.json) instead of one JSON body at the end"
     }
   },
   "additionalProperties": false

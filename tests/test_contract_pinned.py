@@ -12,7 +12,12 @@ CONTRACT = Path(__file__).resolve().parents[1] / "contract" / "chat-api"
 
 def test_the_pinned_files_are_there_and_are_valid_schemas() -> None:
     names = sorted(p.name for p in CONTRACT.iterdir())
-    assert names == ["README.md", "chat_request.schema.json", "chat_response.schema.json"]
+    assert names == [
+        "README.md",
+        "chat_request.schema.json",
+        "chat_response.schema.json",
+        "chat_stream_event.schema.json",
+    ]
     for name in names[1:]:
         jsonschema.Draft202012Validator.check_schema(json.loads((CONTRACT / name).read_text()))
 
